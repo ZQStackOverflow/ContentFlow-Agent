@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>待办事项</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f5f5f5;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            min-height: 100vh;
+            padding: 40px 16px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 24px;
+            font-size: 24px;
+        }
+
+        .input-area {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .input-area input {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .input-area input:focus {
+            outline: none;
+            border-color: #999;
+        }
+
+        .input-area button {
+            padding: 10px 20px;
+            background: #333;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .input-area button:hover {
+            background: #555;
+        }
+
+        .todo-list {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .todo-item {
+            display: flex;
+            align-items: center;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 12px 14px;
+            margin-bottom: 8px;
+        }
+
+        .todo-item input[type="checkbox"] {
+            margin-right: 12px;
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .todo-item span {
+            flex: 1;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .todo-item.done span {
+            text-decoration: line-through;
+            color: #999;
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            font-size: 16px;
+            color: #ccc;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .delete-btn:hover {
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>待办事项</h1>
+        <div class="input-area">
+            <input type="text" id="todoInput" placeholder="输入新的待办事项">
+            <button onclick="addTodo()">添加</button>
+        </div>
+        <div class="todo-list" id="todoList"></div>
+    </div>
+
+    <script>
+        let todos = [];
+        let nextId = 1;
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function render() {
+            const todoList = document.getElementById('todoList');
+            todoList.innerHTML = todos.map(todo => {
+                const doneClass = todo.done ? 'done' : '';
+                return `
+                    <div class="todo-item ${doneClass}">
+                        <input type="checkbox" ${todo.done ? 'checked' : ''} onchange="toggleTodo(${todo.id})">
+                        <span>${escapeHtml(todo.text)}</span>
+                        <button class="delete-btn" onclick="deleteTodo(${todo.id})">🗑</button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function addTodo() {
+            const input = document.getElementById('todoInput');
+            const text = input.value.trim();
+
+            if (!text) return;
+
+            todos.push({
+                id: nextId++,
+                text: text,
+                done: false
+            });
+
+            input.value = '';
+            render();
+        }
+
+        function toggleTodo(id) {
+            const todo = todos.find(t => t.id === id);
+            if (todo) {
+                todo.done = !todo.done;
+                render();
+            }
+        }
+
+        function deleteTodo(id) {
+            todos = todos.filter(t => t.id !== id);
+            render();
+        }
+
+        // Event listener for Enter key
+        document.getElementById('todoInput').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                addTodo();
+            }
+        });
+
+        // Initial render
+        render();
+    </script>
+</body>
+</html>
