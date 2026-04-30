@@ -1,0 +1,12 @@
+abc123 user-service 2024-01-15 10:00:00.123 INFO User login request received
+abc123 user-service 2024-01-15 10:00:00.234 DEBUG Processing user data
+abc123 user-service 2024-01-15 10:00:00.345 ERROR NullPointerException
+Exception in thread "main" java.lang.NullPointerException: Cannot invoke 'getName()' on null object
+        at com.example.UserService.validateUser(UserService.java:45)
+abc123 order-service 2024-01-15 10:00:01.456 ERROR ArrayIndexOutOfBoundsException
+Exception in thread "worker-1" java.lang.ArrayIndexOutOfBoundsException: Index 10 out of bounds for length 5
+        at com.example.OrderService.processItems(OrderService.java:89)
+abc123 payment-service 2024-01-15 10:00:02.789 ERROR TimeoutException
+Exception in thread "http-nio-8080-exec-1" java.util.concurrent.TimeoutException: Request timed out after 5000ms
+        at com.example.PaymentService.processPayment(PaymentService.java:123)
+abc123 notification-service 2024-01-15 10:00:03.123 WARN Payment timeout after 30 seconds
